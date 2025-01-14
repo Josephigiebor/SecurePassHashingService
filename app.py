@@ -4,6 +4,19 @@ from hashing.strength import check_password_strength
 
 app = Flask(__name__)
 
+# ✅ Root Route
+@app.route('/')
+def home():
+    return """
+    <h1>Welcome to SecurePass Hashing Service!</h1>
+    <p>Available Endpoints:</p>
+    <ul>
+        <li><strong>/hash</strong> - POST: Hash a password using bcrypt and argon2</li>
+        <li><strong>/verify</strong> - POST: Verify a hashed password</li>
+        <li><strong>/strength</strong> - POST: Check password strength</li>
+    </ul>
+    """
+
 # Route: Hash Password
 @app.route('/hash', methods=['POST'])
 def hash_password():
