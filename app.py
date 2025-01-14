@@ -13,11 +13,11 @@ def home():
     <ul>
         <li><strong>/hash</strong> - POST: Hash a password using bcrypt and argon2</li>
         <li><strong>/verify</strong> - POST: Verify a hashed password</li>
-        <li><strong>/strength</strong> - POST: Check password strength</li>
+        <li><strong>/strength</strong> - GET/POST: Check password strength</li>
     </ul>
     """
 
-# Route: Hash Password
+# ✅ Route: Hash Password (POST only)
 @app.route('/hash', methods=['POST'])
 def hash_password():
     data = request.get_json()
@@ -33,7 +33,7 @@ def hash_password():
         "argon2_hashed": argon2_hashed
     })
 
-# Route: Verify Password
+# ✅ Route: Verify Password (POST only)
 @app.route('/verify', methods=['POST'])
 def verify_password():
     data = request.get_json()
@@ -53,11 +53,17 @@ def verify_password():
 
     return jsonify({"is_valid": is_valid})
 
-# Route: Password Strength
-@app.route('/strength', methods=['POST'])
+# ✅ Route: Password Strength (GET and POST)
+@app.route('/strength', methods=['GET', 'POST'])
 def password_strength():
-    data = request.get_json()
-    password = data.get('password')
+    if request.method == 'GET':
+        # ✅ Handle GET request (get password from query parameter)
+        password = request.args.get('password')
+    else:
+        # ✅ Handle POST request (get password from JSON body)
+        data = request.get_json()
+        password = data.get('password')
+
     if not password:
         return jsonify({"error": "Password is required"}), 400
 
